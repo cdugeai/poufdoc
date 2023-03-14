@@ -2,6 +2,8 @@
 
 Génération et mise à jour de rapports statistiques éditables.
 
+![ref](./static/PoufDoc.png)
+
 ### Premier périmètre
 
 Premier périmètre réduit pour avoir un résultat atteignable:
