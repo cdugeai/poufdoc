@@ -2,7 +2,6 @@
 
 Génération et mise à jour de rapports statistiques éditables.
 
-![ref](./static/PoufDoc.png)
 
 ### Premier périmètre
 
@@ -10,6 +9,9 @@ Premier périmètre réduit pour avoir un résultat atteignable:
 - insérer des images
 - images hébergées en ligne (sur S3 ou publique)
 - le doc va chercher ces images en ligne et les met à jour
+
+![ref](static/poufDoc-premier-perimetre.png)
+
 
 ### A éclaircir
 
