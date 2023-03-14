@@ -1,2 +1,3 @@
-# poufdoc
-PoufDoc, ou le générateur de rapports statistiques éditables.
+# PoufDoc
+
+Génération et mise à jour de rapports statistiques éditables.
