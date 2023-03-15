@@ -1,5 +1,8 @@
 files:
-  - namespace: "covid"
+  - namespace:
+      name: "Données du COVID-19"
+      shortName: "covid"
+      description: ""
     figures:
       - name: "Cas de COVID-19 dans le monde"
         shortName: "covid-world"
@@ -7,7 +10,10 @@ files:
       - name: "Cas de COVID-19 en France"
         shortName: "covid-france"
         url: "https://raw.githubusercontent.com/CovidTrackerFr/covidtracker-data/master/images/charts/france/dashboard_jour.jpeg"
-  - namespace: "sncf-objets"
+  - namespace:
+      name: "Objets trouvés par la SNCF en gare"
+      shortName: "sncf-objets"
+      description: ""
     figures:
       - name: "Objets trouvés en Gare de Paris Saint-Lazare"
         shortName: "sncf-objets-saint-lazare"
