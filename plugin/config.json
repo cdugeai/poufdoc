@@ -1,0 +1,26 @@
+{
+    "name" : "PoufDoc",
+    "guid" : "asc.{}",
+
+    "variations" : [
+        {
+            "description" : "templates",
+            "url"         : "index.html",
+
+            "icons"           : ["resources/img/icon.png", "resources/img/icon@2x.png"],
+            "isViewer"        : false,
+            "EditorsSupport"  : ["word"],
+
+            "isVisual"        : true,
+            "isModal"         : false,
+            "isInsideMode"    : true,
+
+            "initDataType"    : "none",
+            "initData"        : "",
+
+            "isUpdateOleOnResize" : false,
+
+            "buttons"        : [ ]
+        }
+    ]
+}
