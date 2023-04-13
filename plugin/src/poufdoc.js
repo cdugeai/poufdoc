@@ -5,7 +5,7 @@
     }
 
     var _charts = [
-		["test", 122, 158, "./resources/img/icon.png"],
+		["test", 122, 158, "https://minio.lab.sspcloud.fr/cdugeai/public/dinum.png"],
 	];
 
     var _charts_code = [];
@@ -76,8 +76,18 @@
         var container = document.getElementById('scrollable-container-id');
 
         Ps = new PerfectScrollbar('#' + container.id, {});
+        
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+               // Typical action to be performed when the document is ready:
+               _charts = JSON.parse(xhttp.responseText);
+            }
+            fill_charts();
+        };
+        xhttp.open("GET", "https://minio.lab.sspcloud.fr/cdugeai/public/index.json", true);
+        xhttp.send();
 
-        fill_charts();
     };
 
     window.Asc.plugin.button = function (id) {
@@ -100,7 +110,8 @@
             this.callCommand(function () {
                 var oDocument = Api.GetDocument();
                 var oParagraph = Api.CreateParagraph();
-                oParagraph.AddText(Asc.scope.text); // or oParagraph.AddText(scope.text);
+                var oDrawing = Api.CreateImage(_charts[_index][3], _charts[_index][1] * 36000, _charts[_index][2] * 36000);
+                oParagraph.AddDrawing(oDrawing);
                 oDocument.InsertContent([oParagraph]);
             }, true);
         }
