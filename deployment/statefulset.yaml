@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: documentserver
+spec:
+  serviceName: documentserver
+  selector:
+    matchLabels:
+      app: documentserver
+  template:
+    metadata:
+      labels:
+        app: documentserver
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: plugin
+          emptyDir:
+            sizeLimit: 500Mi
+      initContainers:
+        - name: download-plugin
+          image: ubuntu
+          volumeMounts:
+            - mountPath: /plugin
+              name: plugin
+          command:
+            - "touch"
+          args:
+            - "/plugin/coucou"
+      containers:
+      - name: documentserver
+        image: onlyoffice/documentserver
+        volumeMounts:
+          - mountPath: /var/www/onlyoffice/Data
+            name: data
+            subPath: data
+          - name: plugin
+            mountPath: /var/www/onlyoffice/documentserver/sdkjs-plugins/pouf
