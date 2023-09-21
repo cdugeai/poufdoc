@@ -11,32 +11,32 @@ download.file(url, "dataset_emplois.csv")
 
 df <- read_delim("dataset_emplois.csv", delim =";")
 
-df_num <- df %>% filter(str_detect(Métier , "Data engineer|Data Scientist|Analyste de données|Administratrice de bases de données|Analyste des données" )) %>%
-  mutate(`Organisme de rattachement` = ifelse(str_detect(`Organisme de rattachement`, "Ministère des Armées"), "Ministère des Armées", `Organisme de rattachement` ))
+df_num <- df %>% filter(str_detect(Mï¿½tier , "Data engineer|Data Scientist|Analyste de donnï¿½es|Administratrice de bases de donnï¿½es|Analyste des donnï¿½es" )) %>%
+  mutate(`Organisme de rattachement` = ifelse(str_detect(`Organisme de rattachement`, "Ministï¿½re des Armï¿½es"), "Ministï¿½re des Armï¿½es", `Organisme de rattachement` ))
 
 # 1er graphique 
-graph_1 <- df_num %>%  replace_na(list(`Nature de contrat` = "Non renseigné")) %>%
+graph_1 <- df_num %>%  replace_na(list(`Nature de contrat` = "Non renseignï¿½")) %>%
   ggplot(aes(x = reorder(`Nature de contrat`, -table(`Nature de contrat`)[`Nature de contrat`]), fill = `Nature de contrat`)) +
-  geom_bar(width = 0.3) + labs(x = "Nature de contrat", y = "Nombre d'offres proposées") + 
+  geom_bar(width = 0.3) + labs(x = "Nature de contrat", y = "Nombre d'offres proposï¿½es") + 
   theme(axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Répartition des offres publiées par nature de contrat") 
+  ggtitle("Rï¿½partition des offres publiï¿½es par nature de contrat") 
 
 ggsave("graph1.png")
 
 put_object(file = "graph1.png", object = "graph1.png", bucket = "sgruarin", region = "")
 
-# 2ème graphique 
+# 2ï¿½me graphique 
 graph_2 <- df_num %>% ggplot(aes(x = reorder(Versant, -table(Versant)[Versant]), fill = Versant)) +
   geom_bar(width = 0.3) +
-  labs(x = "Nature de la fonction publique", y = "Nombre d'offres proposées") + 
+  labs(x = "Nature de la fonction publique", y = "Nombre d'offres proposï¿½es") + 
   theme(axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Répartition des offres publiées par nature de la fonction publique") 
+  ggtitle("Rï¿½partition des offres publiï¿½es par nature de la fonction publique") 
 
 ggsave("graph2.png")
 
 put_object(file = "graph2.png", object = "graph2.png", bucket = "sgruarin", region = "")
 
-# 3ème graphique
+# 3ï¿½me graphique
 nb_orga <- df_num %>%  group_by(`Organisme de rattachement`) %>% tally(sort = TRUE) %>% slice(1:5)
 
 
@@ -44,11 +44,27 @@ graph_3 <- ggplot(nb_orga, aes(x="", y=n, fill=`Organisme de rattachement`)) +
   geom_bar(stat="identity", width=1) +
   coord_polar("y", start=0) +
   geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() +
-  ggtitle("Représentation des cinq organisme les plus demandeurs")
+  ggtitle("Reprï¿½sentation des cinq organisme les plus demandeurs")
 
 
 ggsave("graph3.png")
 
 put_object(file = "graph3.png", object = "graph3.png", bucket = "sgruarin", region = "")
+
+# 4Ã¨me graphique
+nature_emploi <- df_num %>%  group_by(`Nature de l'emploi`) %>% tally(sort = TRUE) %>% slice(1:2)
+
+
+graph_4 <- ggplot(nature_emploi, aes(x="", y=n, fill=`Nature de l'emploi`)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0) +
+  geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() +
+  ggtitle("RÃ©partition des offres par nature de l'emploi")
+
+
+ggsave("graph4.png")
+
+
+put_object(file = "graph4.png", object = "graph4.png", bucket = "nfour", region = "")
 
 
