@@ -1,10 +1,23 @@
+# Liste des packages nécessaires
+packages <- c("sf", "readr", "dplyr","tidyr","stringr","ggplot2")
+
+# Vérifier si les packages sont installés, sinon les installer
+for (package in packages) {
+  if (!require(package, character.only = TRUE)) {
+    install.packages(package, dependencies = TRUE)
+    if (!require(package, character.only = TRUE)) {
+      stop(paste("Impossible d'installer le package", package))
+    }
+  }
+}
+
 library(readr)
 library(dplyr)
 library(tidyr)
 library(stringr)
 library(ggplot2)
 library(aws.s3)
-
+library(sf)
 
 url <- "https://www.data.gouv.fr/fr/datasets/r/e215cdb4-4995-4420-9650-8490a79f71df"
 download.file(url, "dataset_emplois.csv")
