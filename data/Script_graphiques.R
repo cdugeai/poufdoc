@@ -48,10 +48,10 @@ put_object(file = "graph1.png", object = "graph1.png", bucket = "sgruarin", regi
 
 # 2�me graphique 
 graph_2 <- df_num %>% ggplot(aes(x = reorder(Versant, -table(Versant)[Versant]), fill = Versant)) +
-  geom_bar(width = 0.3) +
-  labs(x = "Nature de la fonction publique", y = "Nombre d'offres proposées") + 
-  theme(axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Répartition des offres publi�es par nature de la fonction publique") 
+  geom_bar(width = 0.3,color = "#000091" , fill="#cacafb" ) +
+  labs(x = "Versant de la fonction publique", y = "Nombre d'offres proposées") + 
+  theme(axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5)) 
+
 
 ggsave("graph2.png")
 
@@ -63,9 +63,11 @@ nb_orga <- df_num %>%  group_by(`Organisme de rattachement`) %>% tally(sort = TR
 
 graph_3 <- ggplot(nb_orga, aes(x="", y=n, fill=`Organisme de rattachement`)) +
   geom_bar(stat="identity", width=1) +
+  scale_fill_manual(values = c("#000091", "#cacafb", "#c9191e", "#B7A73F", "#2d2a1d")) + 
   coord_polar("y", start=0) +
   geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() +
   ggtitle("Représentation des cinq organisme les plus demandeurs")
+
 
 
 ggsave("graph3.png")
@@ -78,9 +80,9 @@ nature_emploi <- df_num %>%  group_by(`Nature de l'emploi`) %>% tally(sort = TRU
 
 graph_4 <- ggplot(nature_emploi, aes(x="", y=n, fill=`Nature de l'emploi`)) +
   geom_bar(stat="identity", width=1) +
+  scale_fill_manual(values = c("#cacafb", "#000091")) + 
   coord_polar("y", start=0) +
-  geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() +
-  ggtitle("Répartition des offres par nature de l'emploi")
+  geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() 
 
 
 ggsave("graph4.png")
