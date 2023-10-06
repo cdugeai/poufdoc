@@ -47,11 +47,12 @@ ggsave("graph1.png")
 put_object(file = "graph1.png", object = "graph1.png", bucket = "sgruarin", region = "")
 
 # 2�me graphique 
-graph_2 <- df_num %>% ggplot(aes(x = reorder(Versant, -table(Versant)[Versant]), fill = Versant)) +
+graph_2 <- filter(df_num, !is.na(Versant))  %>%
+  ggplot(aes(x = reorder(Versant, -table(Versant)[Versant]), fill = Versant)) +
   geom_bar(width = 0.3,color = "#000091" , fill="#cacafb" ) +
-  labs(x = "Versant de la fonction publique", y = "Nombre d'offres proposées") + 
-  theme(axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5)) 
-
+  labs(x = "Versant de la fonction publique", y = "Nombre d'offres proposées") +
+  theme_classic() +
+  theme(legend.position = "none", text=element_text(family="Marianne", face="bold", size=12),axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5))
 
 ggsave("graph2.png")
 
@@ -127,3 +128,23 @@ graph6 <- ggplot(data.frame(x = 0, y = 0), aes(x, y)) +
 ggsave(graph6.png)
 
 #put_object(file = "graph6.png", object = "graph6.png", bucket = "sgruarin", region = "")
+
+# Graphique 7
+
+
+#par(cex = 0.8)
+
+graph_7 <- df_num %>%  replace_na(list(`Métier` = "Non renseigné")) %>%
+  ggplot(aes(y = reorder(`Métier`, -table(`Métier`)[`Métier`]), fill = `Métier`)) +
+  geom_bar() +
+  labs(x = "Métier", y = "Nombre d'offres proposées", caption = 'Source : data.gouv')+
+  #theme_bw(base_size = 12) +
+  scale_fill_manual(values = c("#cacafb", "#000091", "#6a6af4", "#f5f5fe", "#e3e3fd", "#313178", "#1b1b35")) +
+  ggtitle("Répartition des offres publiées par métier") +
+  theme_classic() +
+  theme(legend.position = "none", text=element_text(family="Marianne", face="bold", size=12)) 
+  
+  
+ggsave("graph7.png")
+
+#put_object(file = "graph7.png", object = "graph7.png", bucket = "nfour", region = "")
