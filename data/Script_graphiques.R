@@ -138,7 +138,6 @@ graph_7 <- df_num %>%  replace_na(list(`Métier` = "Non renseigné")) %>%
   ggplot(aes(y = reorder(`Métier`, -table(`Métier`)[`Métier`]), fill = `Métier`)) +
   geom_bar() +
   labs(x = "Métier", y = "Nombre d'offres proposées", caption = 'Source : data.gouv')+
-  #theme_bw(base_size = 12) +
   scale_fill_manual(values = c("#cacafb", "#000091", "#6a6af4", "#f5f5fe", "#e3e3fd", "#313178", "#1b1b35")) +
   ggtitle("Répartition des offres publiées par métier") +
   theme_classic() +
