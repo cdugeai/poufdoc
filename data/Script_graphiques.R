@@ -35,23 +35,40 @@ df_dep <- df_dep %>% filter(code %in% c("11","24","27","28","32","44","52","53",
 df_num <- df %>% filter(str_detect(Métier , "Data engineer|Data Scientist|Analyste de données|Administratrice de bases de données|Analyste des données" )) %>%
   mutate(`Organisme de rattachement` = ifelse(str_detect(`Organisme de rattachement`, "Ministère des Armées"), "Ministère des Armées", `Organisme de rattachement` ))
 
+
 # 1er graphique 
-graph_1 <- df_num %>%  replace_na(list(`Nature de contrat` = "Non renseigné")) %>%
-  ggplot(aes(x = reorder(`Nature de contrat`, -table(`Nature de contrat`)[`Nature de contrat`]), fill = `Nature de contrat`)) +
-  geom_bar(width = 0.3) + labs(x = "Nature de contrat", y = "Nombre d'offres proposées") + 
-  theme(axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Répartition des offres publi�es par nature de contrat") 
+graph_1 <- df_num %>% replace_na(list(`Nature de contrat` = "Non renseigné")) %>%
+  mutate(Type = case_when(`Nature de contrat` == 'Non renseigné' ~ `Durée du contrat`,
+                          `Nature de contrat` != 'Non renseigné' ~ `Nature de contrat`)) %>% 
+  mutate(`Type de contrat` = case_when(Type == '3 mois' | Type == '2 mois' | Type == '6 mois' | Type == 'CDD de 6 mois' |
+                                         Type == '1 mois' | Type == '4 mois' ~ "CDD de moins de 6 mois",
+                                       Type == "12 mois" | Type == "CDD d'1 an" | Type == '10 mois' | Type == '12 moins' |
+                                         Type == "7 mois" | Type == "1 an" ~ "CDD de 6 mois à 1 an",
+                                       Type == 'CDD de 2 ans' | Type == '19 mois' | Type == '24 mois' | Type == '2 ans' ~ "CDD de 1 à 2 ans",
+                                       Type == '36 mois' | Type == '3 ans' | Type == '48 mois' | Type == '45 mois' |
+                                         Type == 'CDD de 3 ans' ~ "CDD de plus de 2 ans",
+                                       Type == 'CDI' ~ 'CDI') ) %>% 
+  replace_na(list(`Type de contrat` = 'Non renseigné')) %>% 
+  ggplot(aes(x = reorder(`Type de contrat`, -table(`Type de contrat`)[`Type de contrat`]), fill = `Type de contrat`)) +
+  geom_bar(width = 0.3) + labs(x = "Type de contrat", y = "Nombre d'offres proposées", caption = 'Source : data.gouv') + 
+  theme_classic() +
+  theme(axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5), legend.position = 'none', text = element_text(family = 'Marianne', face = 'bold', size = 12)) +
+  scale_fill_manual(values = c("Non renseigné" = '#000091' , "CDD de plus de 2 ans" = '#6a6af4' ,
+                                          "CDD de 6 mois à 1 an" = '#cacafb', "CDI" = '#6a6af4', "CDD de 1 à 2 ans" = '#272747',
+                                          "CDD de moins de 6 mois" = '#e3e3fd' )) +
+  ggtitle("Répartition des offres publiées par type de contrat") 
 
 ggsave("graph1.png")
 
 put_object(file = "graph1.png", object = "graph1.png", bucket = "sgruarin", region = "")
 
 # 2�me graphique 
-graph_2 <- df_num %>% ggplot(aes(x = reorder(Versant, -table(Versant)[Versant]), fill = Versant)) +
+graph_2 <- filter(df_num, !is.na(Versant))  %>%
+  ggplot(aes(x = reorder(Versant, -table(Versant)[Versant]), fill = Versant)) +
   geom_bar(width = 0.3,color = "#000091" , fill="#cacafb" ) +
-  labs(x = "Versant de la fonction publique", y = "Nombre d'offres proposées") + 
-  theme(axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5)) 
-
+  labs(x = "Versant de la fonction publique", y = "Nombre d'offres proposées") +
+  theme_classic() +
+  theme(legend.position = "none", text=element_text(family="Marianne", face="bold", size=12),axis.text.x=element_text(angle=50, hjust=1), plot.title = element_text(hjust = 0.5))
 
 ggsave("graph2.png")
 
@@ -60,15 +77,14 @@ ggsave("graph2.png")
 # 3�me graphique
 nb_orga <- df_num %>%  group_by(`Organisme de rattachement`) %>% tally(sort = TRUE) %>% slice(1:5)
 
-
 graph_3 <- ggplot(nb_orga, aes(x="", y=n, fill=`Organisme de rattachement`)) +
   geom_bar(stat="identity", width=1) +
-  scale_fill_manual(values = c("#000091", "#cacafb", "#c9191e", "#B7A73F", "#2d2a1d")) + 
+  scale_fill_manual(values = c("#c9191e", "#fcbfbf", "#f95c5e", "#5e2a2b", "#e1000f")) + 
   coord_polar("y", start=0) +
-  geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() +
-  ggtitle("Représentation des cinq organisme les plus demandeurs")
-
-
+  geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() + 
+  theme(text = element_text(family = 'Marianne', face = 'bold', size = 12)) + 
+  ggtitle("Représentation des cinq organismes les plus demandeurs") +
+  labs(caption = 'Source : data.gouv')
 
 ggsave("graph3.png")
 
@@ -82,8 +98,9 @@ graph_4 <- ggplot(nature_emploi, aes(x="", y=n, fill=`Nature de l'emploi`)) +
   geom_bar(stat="identity", width=1) +
   scale_fill_manual(values = c("#cacafb", "#000091")) + 
   coord_polar("y", start=0) +
-  geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() 
-
+  geom_text(aes(label = paste0(n)), position = position_stack(vjust=0.5)) + theme_void() +
+  theme(plot.title = element_text(hjust = 0.5),  text = element_text(family = 'Marianne', face = 'bold', size = 12)) + 
+  ggtitle("Répartition des offres par nature de l'emploi") + labs(caption = "Source : data.gouv")
 
 ggsave("graph4.png")
 
@@ -117,7 +134,6 @@ ggsave("graph5.png")
 
 valeur <- nrow(df_num)
 
-# Création du graphique avec ggplot2
 graph6 <- ggplot(data.frame(x = 0, y = 0), aes(x, y)) +
   geom_blank() +
   annotate("text", x = 0.5, y = 0.5, label = valeur, size = 15, fontface = "bold", color = "#000091", vjust = 3.5, hjust = 2.5) +
@@ -127,3 +143,20 @@ graph6 <- ggplot(data.frame(x = 0, y = 0), aes(x, y)) +
 ggsave(graph6.png)
 
 #put_object(file = "graph6.png", object = "graph6.png", bucket = "sgruarin", region = "")
+
+
+# Graphique 7 
+
+graph_7 <- df_num %>%  replace_na(list(`Métier` = "Non renseigné")) %>%
+  ggplot(aes(y = reorder(`Métier`, -table(`Métier`)[`Métier`]), fill = `Métier`)) +
+  geom_bar() +
+  labs(x = "Métier", y = "Nombre d'offres proposées", caption = 'Source : data.gouv')+
+  scale_fill_manual(values = c("#cacafb", "#000091", "#6a6af4", "#f5f5fe", "#e3e3fd", "#313178", "#1b1b35")) +
+  ggtitle("Répartition des offres publiées par métier") +
+  theme_classic() +
+  theme(legend.position = "none", text=element_text(family="Marianne", face="bold", size=12)) 
+
+
+ggsave("graph7.png")
+
+#put_object(file = "graph7.png", object = "graph7.png", bucket = "nfour", region = "")
