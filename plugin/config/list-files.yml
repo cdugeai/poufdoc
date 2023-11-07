@@ -6,7 +6,7 @@ files:
     figures:
       - name: "Cas de COVID-19 dans le monde"
         shortName: "covid-world"
-        url: "https://raw.githubusercontent.com/CovidTrackerFr/covidtracker-data/master/images/charts/cases.jpeg"
+        url: "https://raw.githubusercontent.com/cdugeai/poufdoc/main/data/img/Offres%20par%20Type%20de%20contrat.png"
       - name: "Cas de COVID-19 en France"
         shortName: "covid-france"
         url: "https://raw.githubusercontent.com/CovidTrackerFr/covidtracker-data/master/images/charts/france/dashboard_jour.jpeg"
