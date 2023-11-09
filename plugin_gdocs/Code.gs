@@ -1,27 +1,23 @@
 // Add an item to the Add-on menu, under a sub-menu whose name is set automatically.
 function onOpen(e) {
-  let menuPoufdoc = DocumentApp.getUi().createMenu("Poufdoc").addItem("Configuration", "sayHello").addItem("Choix de la figure", "ask").addItem("Sidebar", "showSidebar");;
+  let menuPoufdoc = DocumentApp.getUi().createMenu("🎩 Poufdoc").addItem("Configuration", "sayHello");
 
-  let menuFiles = DocumentApp.getUi().createMenu("Figures");
-  
+  let menuFiles2 = DocumentApp.getUi().createMenu("🪄 Ajout de figures");
+  let menu_covid = DocumentApp.getUi().createMenu("📈 Données du COVID-19");
+  menu_covid.addItem("Cas de COVID-19 dans le monde", "addFig1")
+  menu_covid.addItem("Cas de COVID-19 en France", "addFig2")
+  menuFiles2.addSubMenu(menu_covid)
 
-  // For each namespace
-  getFileConfig().files.forEach(item_ => {
+  let menu_emploi = DocumentApp.getUi().createMenu("🗃️ Métiers du numérique");
+  menu_emploi.addItem("Offres par Type de contrat", "addFig3")
+  menu_emploi.addItem("Répartition des offres par métier", "addFig4")
+  menu_emploi.addItem("Répartition des offres par nature de l'emploi", "addFig5")
+  menu_emploi.addItem("Répartition des offres par organisme", "addFig6")
+  menu_emploi.addItem("Répartition des offres par versant de la fonction publique", "addFig7")
+  menu_emploi.addItem("Répartition géographique des offres (carte)", "addFig8")
+  menuFiles2.addSubMenu(menu_emploi)
 
-    // Create menu for this namespace
-    let menu_ns = DocumentApp.getUi().createMenu(item_.namespace.name);
-    item_.figures.forEach(figure => {
-      // Add figures to this new menu
-      menu_ns.addItem(figure.name, "addImage('"+figure.url+"')")
-    })
-    // Add this menu as submenu of Poufdoc menu
-    menuFiles.addSubMenu(menu_ns)
-  })
-  
-  let menuDialog = DocumentApp.getUi().createMenu("Dialog");
-
-
-  menuPoufdoc.addSubMenu(menuFiles);
+  menuPoufdoc.addSubMenu(menuFiles2);
   menuPoufdoc.addToUi();
   
 }
@@ -69,6 +65,14 @@ function test() {
   
 }
 
+let addFig1 = async () => {await addImage("https://raw.githubusercontent.com/CovidTrackerFr/covidtracker-data/master/images/charts/cases.jpeg")}
+let addFig2 = async () => {await addImage("https://raw.githubusercontent.com/CovidTrackerFr/covidtracker-data/master/images/charts/france/dashboard_jour.jpeg")}
+let addFig3 = async () => {await addImage("https://raw.githubusercontent.com/cdugeai/poufdoc/main/data/img/Offres%20par%20Type%20de%20contrat.png")}
+let addFig4 = async () => {await addImage("https://github.com/cdugeai/poufdoc/blob/main/data/img/Re%CC%81partition%20des%20offres%20par%20me%CC%81tier.png?raw=true")}
+let addFig5 = async () => {await addImage("https://github.com/cdugeai/poufdoc/blob/main/data/img/Re%CC%81partition%20des%20offres%20par%20nature%20de%20l'emploi.png?raw=true")}
+let addFig6 = async () => {await addImage("https://github.com/cdugeai/poufdoc/blob/main/data/img/Re%CC%81partition%20des%20offres%20par%20organisme.png?raw=true")}
+let addFig7 = async () => {await addImage("https://github.com/cdugeai/poufdoc/blob/main/data/img/Re%CC%81partition%20des%20offres%20par%20versant%20de%20la%20fonction%20publique.png?raw=true")}
+let addFig8 = async () => {await addImage("https://github.com/cdugeai/poufdoc/blob/main/data/img/R%C3%A9partition%20g%C3%A9ographique%20des%20offres%20(carte).png?raw=true")}
 
 async function addImage(url) {
   //let url="https://raw.githubusercontent.com/CovidTrackerFr/covidtracker-data/master/images/charts/france/dashboard_jour.jpeg"
@@ -76,8 +80,8 @@ async function addImage(url) {
    const image = tempImage.getBlob();
    const docBody = DocumentApp.getActiveDocument().getBody()
    const inlineImage = docBody.appendImage(image);
-   inlineImage.setHeight(300).setWidth(200);    //.setLinkUrl(url)
- }
+   inlineImage.setHeight(300).setWidth(400);    //.setLinkUrl(url)
+}
 
 function mockFileConfig() {
   return {
