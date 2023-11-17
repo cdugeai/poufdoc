@@ -58,7 +58,7 @@ graph_1 <- df_num %>% replace_na(list(`Nature de contrat` = "Non renseigné")) %
                                           "CDD de moins de 6 mois" = '#e3e3fd' )) +
   ggtitle("Répartition des offres publiées par type de contrat") 
 
-ggsave("graph1.png")
+ggsave("R�partition des offres par type de contrat.png")
 
 put_object(file = "graph1.png", object = "graph1.png", bucket = "sgruarin", region = "")
 
